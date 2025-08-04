@@ -616,11 +616,13 @@
                         confirmationMessage.style.display = 'none';
                     }, 5000);
                 } else {
-                    alert(`Error al enviar el formulario: ${result.message}`);
+                    // Muestra el mensaje de error específico del script si lo hay
+                    alert(`Error al enviar el formulario: ${result.message || 'Error desconocido del servidor.'}`);
+                    console.error('Error del servidor:', result.message);
                 }
             } catch (error) {
-                console.error('Error al enviar el formulario:', error); // Mensaje de error más descriptivo
-                alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                console.error('Error de red o de la solicitud fetch:', error); // Mensaje de error más descriptivo
+                alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo. Revisa la consola para más detalles.');
             } finally {
                 loadingOverlay.style.display = 'none';
             }
