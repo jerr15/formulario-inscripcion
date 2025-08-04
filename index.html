@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Inscripción Regular</title>
+    <!-- Tailwind CSS para el estilo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        /* Estilos para el indicador de carga */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #confirmation-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #10b981;
+            color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none;
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 flex items-center justify-center min-h-screen">
+
+    <!-- Mensaje de Confirmación -->
+    <div id="confirmation-message" role="alert">
+        <h2 class="text-2xl font-bold mb-2">¡Inscripción Exitosa!</h2>
+        <p>Tu formulario ha sido enviado correctamente. Revisa tu correo electrónico para una confirmación.</p>
+    </div>
+
+    <!-- Indicador de Carga -->
+    <div id="loading-overlay">
+        <div id="loading-spinner"></div>
+    </div>
+
+    <div class="bg-white p-6 sm:p-10 rounded-xl shadow-lg border border-gray-200 w-full max-w-3xl mx-auto">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-4">Ficha de Inscripción Regular</h1>
+        <p class="text-center text-gray-600 mb-8">Por favor, completa todas las secciones del formulario.</p>
+
+        <form id="inscripcionForm" class="space-y-6">
+            
+            <!-- SECCIÓN 1: Datos del Estudiante -->
+            <div id="section1" class="form-section active">
+                <h2 class="text-xl font-semibold mb-4 text-indigo-700">1. Datos del Estudiante</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="nombre_estudiante" class="block text-sm font-medium text-gray-700">Nombres</label>
+                        <input type="text" id="nombre_estudiante" name="nombre_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="apellido_estudiante" class="block text-sm font-medium text-gray-700">Apellidos</label>
+                        <input type="text" id="apellido_estudiante" name="apellido_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="cedula_estudiante" class="block text-sm font-medium text-gray-700">Cédula</label>
+                        <input type="text" id="cedula_estudiante" name="cedula_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="edad_estudiante" class="block text-sm font-medium text-gray-700">Edad</label>
+                        <!-- El campo de edad ya no es requerido y se llenará automáticamente -->
+                        <input type="number" id="edad_estudiante" name="edad_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" readonly>
+                    </div>
+                    <div>
+                        <label for="sexo_estudiante" class="block text-sm font-medium text-gray-700">Sexo</label>
+                        <select id="sexo_estudiante" name="sexo_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                            <option value="">Selecciona</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="fecha_nacimiento_estudiante" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+                        <input type="date" id="fecha_nacimiento_estudiante" name="fecha_nacimiento_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="lugar_nacimiento_estudiante" class="block text-sm font-medium text-gray-700">Lugar de Nacimiento</label>
+                        <input type="text" id="lugar_nacimiento_estudiante" name="lugar_nacimiento_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="estado_nacimiento_estudiante" class="block text-sm font-medium text-gray-700">Estado de Nacimiento</label>
+                        <input type="text" id="estado_nacimiento_estudiante" name="estado_nacimiento_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="plantel_procedencia" class="block text-sm font-medium text-gray-700">Plantel de Procedencia</label>
+                        <input type="text" id="plantel_procedencia" name="plantel_procedencia" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="direccion_habitacion_estudiante" class="block text-sm font-medium text-gray-700">Dirección de Habitación (Estudiante)</label>
+                        <textarea id="direccion_habitacion_estudiante" name="direccion_habitacion_estudiante" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="enfermedad_discapacidad" class="block text-sm font-medium text-gray-700">Alguna Enfermedad y/o Discapacidad</label>
+                        <input type="text" id="enfermedad_discapacidad" name="enfermedad_discapacidad" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="correo_estudiante" class="block text-sm font-medium text-gray-700">Correo Electrónico (Estudiante)</label>
+                        <input type="email" id="correo_estudiante" name="correo_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: Información Académica y Hermanos -->
+            <div id="section2" class="form-section">
+                <h2 class="text-xl font-semibold mb-4 text-indigo-700">2. Información Académica y Hermanos</h2>
+                
+                <!-- Checkbox para incluir/excluir toda la sección 2 -->
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" id="include_academica_hermanos_data" name="include_academica_hermanos_data" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <label for="include_academica_hermanos_data" class="ml-2 block text-sm font-medium text-gray-700">Incluir Información Académica y de Hermanos</label>
+                </div>
+
+                <!-- Contenedor de campos de la sección 2 (visible/oculto por el checkbox) -->
+                <div id="academica_hermanos_data_fields" class="grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded-md bg-gray-50" style="display: none;">
+                    <div class="md:col-span-2">
+                        <label for="ano_escolar" class="block text-sm font-medium text-gray-700">Año Escolar al que se inscribe</label>
+                        <input type="text" id="ano_escolar" name="ano_escolar" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="estatura" class="block text-sm font-medium text-gray-700">Estatura (cm)</label>
+                        <input type="number" id="estatura" name="estatura" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="talla_camisa" class="block text-sm font-medium text-gray-700">Talla Camisa</label>
+                        <input type="text" id="talla_camisa" name="talla_camisa" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="talla_pantalon" class="block text-sm font-medium text-gray-700">Talla Pantalón</label>
+                        <input type="text" id="talla_pantalon" name="talla_pantalon" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="actividad_interes" class="block text-sm font-medium text-gray-700">Actividad de Interés</label>
+                        <input type="text" id="actividad_interes" name="actividad_interes" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">¿Tiene hermanos en el plantel?</label>
+                        <div class="mt-1 flex items-center space-x-4 mb-4">
+                            <input type="radio" id="hermanos_si" name="tiene_hermanos" value="Sí" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            <label for="hermanos_si" class="text-sm font-medium text-gray-700">Sí</label>
+                            <input type="radio" id="hermanos_no" name="tiene_hermanos" value="No" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" checked>
+                            <label for="hermanos_no" class="text-sm font-medium text-gray-700">No</label>
+                        </div>
+                        <div id="hermano_info_fields" class="grid grid-cols-1 md:grid-cols-2 gap-4" style="display: none;">
+                            <div>
+                                <label for="nombre_hermano" class="block text-sm font-medium text-gray-700">Nombre del Hermano</label>
+                                <input type="text" id="nombre_hermano" name="nombre_hermano" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label for="ano_hermano" class="block text-sm font-medium text-gray-700">Año del Hermano</label>
+                                <input type="text" id="ano_hermano" name="ano_hermano" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: Datos de la Madre y el Padre -->
+            <div id="section3" class="form-section">
+                <h2 class="text-xl font-semibold mb-4 text-indigo-700">3. Datos de la Madre y el Padre</h2>
+                
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" id="include_madre_data" name="include_madre_data" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <label for="include_madre_data" class="ml-2 block text-sm font-medium text-gray-700">Incluir Datos de la Madre</label>
+                </div>
+                <div id="madre_data_fields" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 border p-4 rounded-md bg-gray-50" style="display: none;">
+                    <div>
+                        <label for="nombre_apellido_madre" class="block text-sm font-medium text-gray-700">Nombres y Apellidos</label>
+                        <input type="text" id="nombre_apellido_madre" name="nombre_apellido_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="ci_madre" class="block text-sm font-medium text-gray-700">C.I.</label>
+                        <input type="text" id="ci_madre" name="ci_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="tel_habitacion_madre" class="block text-sm font-medium text-gray-700">Teléfono de Habitación (NO CELULAR)</label>
+                        <input type="tel" id="tel_habitacion_madre" name="tel_habitacion_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="celular_madre" class="block text-sm font-medium text-gray-700">Celular</label>
+                        <input type="tel" id="celular_madre" name="celular_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="direccion_habitacion_madre" class="block text-sm font-medium text-gray-700">Dirección de Habitación</label>
+                        <textarea id="direccion_habitacion_madre" name="direccion_habitacion_madre" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div>
+                        <label for="profesion_madre" class="block text-sm font-medium text-gray-700">Profesión</label>
+                        <input type="text" id="profesion_madre" name="profesion_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="donde_trabaja_madre" class="block text-sm font-medium text-gray-700">Donde Trabaja</label>
+                        <input type="text" id="donde_trabaja_madre" name="donde_trabaja_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="cargo_madre" class="block text-sm font-medium text-gray-700">Cargo</label>
+                        <input type="text" id="cargo_madre" name="cargo_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="direccion_trabajo_madre" class="block text-sm font-medium text-gray-700">Dirección del Trabajo</label>
+                        <textarea id="direccion_trabajo_madre" name="direccion_trabajo_madre" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="correo_madre" class="block text-sm font-medium text-gray-700">Correo Electrónico (Madre)</label>
+                        <input type="email" id="correo_madre" name="correo_madre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" id="include_padre_data" name="include_padre_data" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <label for="include_padre_data" class="ml-2 block text-sm font-medium text-gray-700">Incluir Datos del Padre</label>
+                </div>
+                <div id="padre_data_fields" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 border p-4 rounded-md bg-gray-50" style="display: none;">
+                    <div>
+                        <label for="nombre_apellido_padre" class="block text-sm font-medium text-gray-700">Nombres y Apellidos</label>
+                        <input type="text" id="nombre_apellido_padre" name="nombre_apellido_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="ci_padre" class="block text-sm font-medium text-gray-700">C.I.</label>
+                        <input type="text" id="ci_padre" name="ci_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="tel_habitacion_padre" class="block text-sm font-medium text-gray-700">Teléfono de Habitación (NO CELULAR)</label>
+                        <input type="tel" id="tel_habitacion_padre" name="tel_habitacion_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="celular_padre" class="block text-sm font-medium text-gray-700">Celular</label>
+                        <input type="tel" id="celular_padre" name="celular_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="direccion_habitacion_padre" class="block text-sm font-medium text-gray-700">Dirección de Habitación</label>
+                        <textarea id="direccion_habitacion_padre" name="direccion_habitacion_padre" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div>
+                        <label for="profesion_padre" class="block text-sm font-medium text-gray-700">Profesión</label>
+                        <input type="text" id="profesion_padre" name="profesion_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="donde_trabaja_padre" class="block text-sm font-medium text-gray-700">Donde Trabaja</label>
+                        <input type="text" id="donde_trabaja_padre" name="donde_trabaja_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="cargo_padre" class="block text-sm font-medium text-gray-700">Cargo</label>
+                        <input type="text" id="cargo_padre" name="cargo_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="direccion_trabajo_padre" class="block text-sm font-medium text-gray-700">Dirección del Trabajo</label>
+                        <textarea id="direccion_trabajo_padre" name="direccion_trabajo_padre" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="correo_padre" class="block text-sm font-medium text-gray-700">Correo Electrónico (Padre)</label>
+                        <input type="email" id="correo_padre" name="correo_padre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: Datos del Representante y Contacto de Emergencia -->
+            <div id="section4" class="form-section">
+                <h2 class="text-xl font-semibold mb-4 text-indigo-700">4. Datos del Representante en el Colegio y Contacto de Emergencia</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 border p-4 rounded-md bg-gray-50">
+                    <div>
+                        <label for="nombre_apellido_representante" class="block text-sm font-medium text-gray-700">Nombres y Apellidos Representante</label>
+                        <input type="text" id="nombre_apellido_representante" name="nombre_apellido_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="ci_representante" class="block text-sm font-medium text-gray-700">C.I.</label>
+                        <input type="text" id="ci_representante" name="ci_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="tel_habitacion_representante" class="block text-sm font-medium text-gray-700">Teléfono de Habitación (NO CELULAR)</label>
+                        <input type="tel" id="tel_habitacion_representante" name="tel_habitacion_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="celular_representante" class="block text-sm font-medium text-gray-700">Celular</label>
+                        <input type="tel" id="celular_representante" name="celular_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="direccion_habitacion_representante" class="block text-sm font-medium text-gray-700">Dirección de Habitación</label>
+                        <textarea id="direccion_habitacion_representante" name="direccion_habitacion_representante" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/></textarea>
+                    </div>
+                    <div>
+                        <label for="profesion_representante" class="block text-sm font-medium text-gray-700">Profesión</label>
+                        <input type="text" id="profesion_representante" name="profesion_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="donde_trabaja_representante" class="block text-sm font-medium text-gray-700">Donde Trabaja</label>
+                        <input type="text" id="donde_trabaja_representante" name="donde_trabaja_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="cargo_representante" class="block text-sm font-medium text-gray-700">Cargo</label>
+                        <input type="text" id="cargo_representante" name="cargo_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="direccion_trabajo_representante" class="block text-sm font-medium text-gray-700">Dirección del Trabajo</label>
+                        <textarea id="direccion_trabajo_representante" name="direccion_trabajo_representante" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="correo_representante" class="block text-sm font-medium text-gray-700">Correo Electrónico (Representante)</label>
+                        <input type="email" id="correo_representante" name="correo_representante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="parentesco_estudiante" class="block text-sm font-medium text-gray-700">Parentesco con el Estudiante</label>
+                        <input type="text" id="parentesco_estudiante" name="parentesco_estudiante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div>
+                        <label for="contacto_emergencia" class="block text-sm font-medium text-gray-700">Contacto de Emergencia</label>
+                        <input type="tel" id="contacto_emergencia" name="contacto_emergencia" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" /*required*/>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="personas_autorizadas" class="block text-sm font-font-medium text-gray-700">Personas Autorizadas para Retirar al Menor</label>
+                        <textarea id="personas_autorizadas" name="personas_autorizadas" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                </div>
+                
+                <div class="flex items-start mt-6">
+                    <input id="terminos" name="terminos" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" /*required*/>
+                    <label for="terminos" class="ml-2 block text-sm text-gray-900">
+                        Acepto los términos y condiciones de la inscripción.
+                    </label>
+                </div>
+            </div>
+
+            <!-- Botones de Navegación -->
+            <div class="flex justify-between mt-8">
+                <button type="button" id="prevBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105">
+                    Anterior
+                </button>
+                <button type="button" id="nextBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105">
+                    Siguiente
+                </button>
+                <button type="submit" id="submitBtn" class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105">
+                    Enviar Inscripción
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Lógica del formulario
+        let currentSection = 1;
+        const totalSections = 4;
+        
+        const form = document.getElementById('inscripcionForm');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const confirmationMessage = document.getElementById('confirmation-message');
+
+        // Checkbox y contenedor para toda la sección de Información Académica y Hermanos
+        const includeAcademicaHermanosDataCheckbox = document.getElementById('include_academica_hermanos_data');
+        const academicaHermanosDataFields = document.getElementById('academica_hermanos_data_fields');
+        // Campos dentro de la sección 2 que serían requeridos si la sección está activa
+        const academicaHermanosRequiredFields = academicaHermanosDataFields.querySelectorAll(
+            '[name="ano_escolar"], [name="sexo_estudiante"]' // Añade aquí otros campos si los haces requeridos
+        );
+
+        // Radios y campos específicos de hermanos dentro de la sección 2
+        const sectionRadiosHermanos = document.querySelectorAll('input[name="tiene_hermanos"]');
+        const hermanoInfoFields = document.getElementById('hermano_info_fields');
+        const nombreHermanoInput = document.getElementById('nombre_hermano');
+        const anoHermanoInput = document.getElementById('ano_hermano');
+        const hermanoSpecificRequiredFields = [nombreHermanoInput, anoHermanoInput]; // Campos requeridos si se selecciona "Sí"
+
+        // Campos de fecha de nacimiento y edad del estudiante
+        const fechaNacimientoEstudianteInput = document.getElementById('fecha_nacimiento_estudiante');
+        const edadEstudianteInput = document.getElementById('edad_estudiante');
+
+        // Checkboxes y contenedores para datos de Madre y Padre
+        const includeMadreDataCheckbox = document.getElementById('include_madre_data');
+        const madreDataFields = document.getElementById('madre_data_fields');
+        const madreRequiredFields = madreDataFields.querySelectorAll('[name="nombre_apellido_madre"], [name="ci_madre"], [name="celular_madre"], [name="direccion_habitacion_madre"]');
+
+        const includePadreDataCheckbox = document.getElementById('include_padre_data');
+        const padreDataFields = document.getElementById('padre_data_fields');
+        const padreRequiredFields = padreDataFields.querySelectorAll('[name="nombre_apellido_padre"], [name="ci_padre"], [name="celular_padre"], [name="direccion_habitacion_padre"]');
+
+
+        // Función para calcular la edad
+        const calculateAge = () => {
+            const birthDateStr = fechaNacimientoEstudianteInput.value;
+            if (birthDateStr) {
+                const birthDate = new Date(birthDateStr);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDifference = today.getMonth() - birthDate.getMonth();
+                if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                edadEstudianteInput.value = age;
+            } else {
+                edadEstudianteInput.value = ''; // Limpiar si no hay fecha
+            }
+        };
+
+        // Escuchar cambios en la fecha de nacimiento para calcular la edad
+        fechaNacimientoEstudianteInput.addEventListener('change', calculateAge);
+
+        // Función para mostrar/ocultar los campos de "nombre_hermano" y "ano_hermano"
+        // basada en el radio button "Sí/No" (solo si la sección académica está activa)
+        const toggleHermanoInfoFields = () => {
+            const isAcademicaHermanosIncluded = includeAcademicaHermanosDataCheckbox.checked;
+            const tieneHermanosRadio = document.querySelector('input[name="tiene_hermanos"]:checked');
+
+            if (isAcademicaHermanosIncluded && tieneHermanosRadio && tieneHermanosRadio.value === 'Sí') {
+                hermanoInfoFields.style.display = 'grid';
+                // hermanoSpecificRequiredFields.forEach(field => { field.setAttribute('required', 'true'); }); // Comentado para pruebas
+            } else {
+                hermanoInfoFields.style.display = 'none';
+                hermanoSpecificRequiredFields.forEach(field => { 
+                    field.removeAttribute('required');
+                    field.value = ''; // Limpiar campos si se ocultan
+                });
+            }
+        };
+
+        // Función para mostrar/ocultar toda la sección de Información Académica y Hermanos
+        const toggleAcademicaHermanosFields = () => {
+            const isChecked = includeAcademicaHermanosDataCheckbox.checked;
+            academicaHermanosDataFields.style.display = isChecked ? 'grid' : 'none';
+
+            academicaHermanosRequiredFields.forEach(field => {
+                if (isChecked) {
+                    // field.setAttribute('required', 'true'); // Comentado para pruebas
+                } else {
+                    field.removeAttribute('required');
+                    field.value = ''; // Limpiar campos si se ocultan
+                }
+            });
+
+            // Si la sección se oculta, asegúrate de resetear los radios y campos de hermanos
+            if (!isChecked) {
+                document.getElementById('hermanos_no').checked = true; // Selecciona "No" por defecto
+            }
+            toggleHermanoInfoFields(); // Actualiza la visibilidad de los campos de hermano
+        };
+
+        // Escuchar cambios en el checkbox principal de Información Académica y Hermanos
+        includeAcademicaHermanosDataCheckbox.addEventListener('change', toggleAcademicaHermanosFields);
+
+        // Escuchar cambios en los radios de hermanos (Sí/No)
+        sectionRadiosHermanos.forEach(radio => {
+            radio.addEventListener('change', toggleHermanoInfoFields);
+        });
+
+
+        // Función para mostrar/ocultar y establecer 'required' para los campos de la madre
+        const toggleMadreFields = () => {
+            const isChecked = includeMadreDataCheckbox.checked;
+            madreDataFields.style.display = isChecked ? 'grid' : 'none';
+            madreRequiredFields.forEach(field => {
+                if (isChecked) {
+                    // field.setAttribute('required', 'true'); // Comentado para pruebas
+                } else {
+                    field.removeAttribute('required');
+                    field.value = ''; // Limpiar campos si se ocultan
+                }
+            });
+        };
+
+        // Función para mostrar/ocultar y establecer 'required' para los campos del padre
+        const togglePadreFields = () => {
+            const isChecked = includePadreDataCheckbox.checked;
+            padreDataFields.style.display = isChecked ? 'grid' : 'none';
+            padreRequiredFields.forEach(field => {
+                if (isChecked) {
+                    // field.setAttribute('required', 'true'); // Comentado para pruebas
+                } else {
+                    field.removeAttribute('required');
+                    field.value = ''; // Limpiar campos si se ocultan
+                }
+            });
+        };
+
+        // Escuchar cambios en los checkboxes de madre y padre
+        includeMadreDataCheckbox.addEventListener('change', toggleMadreFields);
+        includePadreDataCheckbox.addEventListener('change', togglePadreFields);
+
+
+        // Inicializar el estado de los campos al cargar la página
+        const initializeFormState = () => {
+            toggleAcademicaHermanosFields(); // Inicializa la sección de académica y hermanos
+            toggleMadreFields();
+            togglePadreFields();
+            calculateAge(); // Asegura que la edad se calcule si ya hay fecha
+        };
+
+        const updateSection = () => {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`section${currentSection}`).classList.add('active');
+
+            prevBtn.style.display = currentSection === 1 ? 'none' : 'block';
+            nextBtn.style.display = currentSection === totalSections ? 'none' : 'block';
+            submitBtn.style.display = currentSection === totalSections ? 'block' : 'none';
+        };
+
+        const validateSection = () => {
+            // Deshabilitado temporalmente para pruebas
+            /*
+            const currentInputs = document.querySelectorAll(`#section${currentSection} [required]`);
+            for (const input of currentInputs) {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    return false;
+                }
+            }
+            */
+            return true; // Siempre retorna true para deshabilitar la validación
+        };
+
+        nextBtn.addEventListener('click', () => {
+            // La validación está comentada, por lo que siempre avanzará
+            // if (validateSection() && currentSection < totalSections) {
+            if (currentSection < totalSections) {
+                currentSection++;
+                updateSection();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSection > 1) {
+                currentSection--;
+                updateSection();
+            }
+        });
+
+        // Configura el endpoint de Google Apps Script
+        // ¡IMPORTANTE! Reemplaza 'YOUR_APPS_SCRIPT_ID' con la URL de despliegue de tu Google Apps Script.
+        // Asegúrate de que tu script esté desplegado como "Aplicación web" con acceso para "Cualquier persona".
+        // La URL debe terminar en '/exec', NO en '/dev'.
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPAfeC7GSC_TJag-AYxaqJVzYujxyIUXmvN035ERpbnkmCNyg94rknOyv5ih3jM56poQ/exec'; 
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // La validación está comentada, por lo que siempre continuará
+            /*
+            if (!validateSection()) {
+                return;
+            }
+            */
+
+            loadingOverlay.style.display = 'flex';
+
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => (data[key] = value));
+
+            // Convertir el valor del checkbox a booleano o string 'Sí'/'No'
+            data.terminos = data.terminos === 'on' ? 'Sí' : 'No';
+            data.include_madre_data = includeMadreDataCheckbox.checked ? 'Sí' : 'No';
+            data.include_padre_data = includePadreDataCheckbox.checked ? 'Sí' : 'No';
+            data.include_academica_hermanos_data = includeAcademicaHermanosDataCheckbox.checked ? 'Sí' : 'No';
+
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    form.reset();
+                    currentSection = 1;
+                    updateSection();
+                    initializeFormState(); // Reinicia el estado de las secciones opcionales
+                    confirmationMessage.style.display = 'block';
+                    setTimeout(() => {
+                        confirmationMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    alert(`Error al enviar el formulario: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error al enviar el formulario:', error); // Mensaje de error más descriptivo
+                alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        });
+
+        initializeFormState(); // Llama a la función de inicialización al cargar la página
+        updateSection();
+    </script>
+</body>
+</html>
